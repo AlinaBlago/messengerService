@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 public class Messages {
     public static ArrayList<Message> messages;
+    public static ArrayList<Message> unreadMessages;
 
     public static void Init() throws IOException {
 
@@ -59,11 +60,6 @@ public class Messages {
         writer.close();
     }
 
-
-    public static void AddUser(Message message){
-        messages.add(message);
-    }
-
     public static Set<String> GetUserChats(String login){
         Set<String> usersToReturn = new HashSet<>();
 
@@ -84,5 +80,28 @@ public class Messages {
         return usersToReturn;
     }
 
+    public static void addNewMessage(Message message){
+        unreadMessages.add(message);
+    }
+
+    public static Set<String> haveNewMessages(String receiverLogin){
+        Set<String> usersToReturn = new HashSet<>();
+
+        ArrayList<Message> messagesCurrentUser = new ArrayList<Message>();
+
+        messagesCurrentUser = (ArrayList<Message>) unreadMessages.stream().filter(new Predicate<Message>() {
+            public boolean test(Message msg) {
+                return msg.getReceiver().equals(receiverLogin);
+            }
+        });
+
+
+        for(Message msg : messagesCurrentUser){
+            usersToReturn.add(msg.getSender());
+            usersToReturn.add(msg.getReceiver());
+        }
+
+        return usersToReturn;
+    }
 
 }
