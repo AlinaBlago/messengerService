@@ -15,7 +15,7 @@ public class MessageController {
 
     @RequestMapping(value = "/GetUserChats" , method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public AuthorizationResponse Login(String login , String key){
+    public AuthorizationResponse getUserChats(String login , String key){
         AuthorizationResponse response = new AuthorizationResponse();
 
         if(Users.IsUserHaveAccess(login , key)){
@@ -34,4 +34,24 @@ public class MessageController {
         response.setResponseMessage("error");
         return response;
     }
+
+    @RequestMapping(value = "/isUserExists" , method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public AuthorizationResponse isUserExists(String senderLogin , String senderKey , String findUserLogin){
+        AuthorizationResponse response = new AuthorizationResponse();
+
+        if(Users.IsUserHaveAccess(senderLogin , senderKey)){
+
+            if(Users.FindUser(findUserLogin)) {
+                response.setResponseID(0);
+                response.setResponseMessage("Exists");
+
+                return response;
+            }
+        }
+        response.setResponseID(2);
+        response.setResponseMessage("error");
+        return response;
+    }
+
 }
