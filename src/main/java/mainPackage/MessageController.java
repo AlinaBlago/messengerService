@@ -49,7 +49,9 @@ public class MessageController {
                 return response;
             }
         }
-        response.setResponseID(2);
+
+
+        response.setResponseID(1);
         response.setResponseMessage("error");
         return response;
     }
