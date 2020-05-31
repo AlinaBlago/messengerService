@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -93,6 +94,27 @@ public class MessageController {
         response.setResponseMessage("error");
         return response;
     }
+
+    @RequestMapping(value = "/getChat" , method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public AuthorizationResponse haveNewMessages(String senderLogin , String senderKey , String companionLogin){
+        AuthorizationResponse response = new AuthorizationResponse();
+
+        if(Users.IsUserHaveAccess(senderLogin , senderKey)){
+
+            ArrayList<Message> messages = Messages.getChat(senderLogin , companionLogin);
+
+            Gson gson = new Gson();
+            response.setResponseID(0);
+            response.setResponseMessage(gson.toJson(messages));
+            return response;
+        }
+
+        response.setResponseID(1);
+        response.setResponseMessage("error");
+        return response;
+    }
+
 
 
 

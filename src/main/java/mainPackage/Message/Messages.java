@@ -16,6 +16,8 @@ public class Messages {
 
     public static void Init() throws IOException {
 
+        unreadMessages = new ArrayList<Message>();
+
         File file= new File ("/Users/vladislav/Desktop/javaMessagesJson.txt");
         FileWriter fw;
         if (file.exists())
@@ -63,18 +65,11 @@ public class Messages {
     public static Set<String> GetUserChats(String login){
         Set<String> usersToReturn = new HashSet<>();
 
-        ArrayList<Message> messagesCurrentUser = new ArrayList<Message>();
-
-        messagesCurrentUser = (ArrayList<Message>) messages.stream().filter(new Predicate<Message>() {
-            public boolean test(Message msg) {
-                return msg.getSender().equals(login) || msg.getReceiver().equals(login);
+        for(Message msg1 : messages){
+            if(msg1.getSender().equals(login) || msg1.getReceiver().equals(login)){
+                usersToReturn.add(msg1.getReceiver());
+                usersToReturn.add(msg1.getSender());
             }
-        });
-
-
-        for(Message msg : messagesCurrentUser){
-            usersToReturn.add(msg.getSender());
-            usersToReturn.add(msg.getReceiver());
         }
 
         return usersToReturn;
@@ -87,21 +82,37 @@ public class Messages {
     public static Set<String> haveNewMessages(String receiverLogin){
         Set<String> usersToReturn = new HashSet<>();
 
-        ArrayList<Message> messagesCurrentUser = new ArrayList<Message>();
+        if(unreadMessages.isEmpty()) return usersToReturn;
 
-        messagesCurrentUser = (ArrayList<Message>) unreadMessages.stream().filter(new Predicate<Message>() {
-            public boolean test(Message msg) {
-                return msg.getReceiver().equals(receiverLogin);
+        ArrayList<Message> messagesToRelocate = new ArrayList<>();
+
+        for(Message msg1 : unreadMessages){
+            if(msg1.getReceiver().equals(receiverLogin)){
+                usersToReturn.add(msg1.getReceiver());
+                usersToReturn.add(msg1.getSender());
+                messagesToRelocate.add(msg1);
             }
-        });
+        }
 
-
-        for(Message msg : messagesCurrentUser){
-            usersToReturn.add(msg.getSender());
-            usersToReturn.add(msg.getReceiver());
+        if(messagesToRelocate.size() > 0){
+            unreadMessages.removeAll(messagesToRelocate);
+            messages.addAll(messagesToRelocate);
         }
 
         return usersToReturn;
+    }
+
+    public static ArrayList<Message> getChat(String senderLogin , String receiverLogin){
+        ArrayList<Message> messages = new ArrayList<Message>();
+
+        for(Message msg : messages){
+            if(msg.getSender().equals(senderLogin) && msg.getReceiver().equals(receiverLogin) ||
+            msg.getReceiver().equals(senderLogin) && msg.getSender().equals(receiverLogin)){
+                messages.add(msg);
+            }
+        }
+
+        return messages;
     }
 
 }
