@@ -72,6 +72,13 @@ public class Messages {
             }
         }
 
+        for(Message msg : unreadMessages){
+            if(msg.getSender().equals(login) || msg.getReceiver().equals(login)){
+                usersToReturn.add(msg.getSender());
+                usersToReturn.add(msg.getReceiver());
+            }
+        }
+
         return usersToReturn;
     }
 
@@ -103,16 +110,23 @@ public class Messages {
     }
 
     public static ArrayList<Message> getChat(String senderLogin , String receiverLogin){
-        ArrayList<Message> messages = new ArrayList<Message>();
+        ArrayList<Message> messagesToReturn = new ArrayList<Message>();
 
         for(Message msg : messages){
             if(msg.getSender().equals(senderLogin) && msg.getReceiver().equals(receiverLogin) ||
             msg.getReceiver().equals(senderLogin) && msg.getSender().equals(receiverLogin)){
-                messages.add(msg);
+                messagesToReturn.add(msg);
             }
         }
 
-        return messages;
+        for(Message msg : unreadMessages){
+            if(msg.getSender().equals(senderLogin) && msg.getReceiver().equals(receiverLogin) ||
+                    msg.getReceiver().equals(senderLogin) && msg.getSender().equals(receiverLogin)){
+                messagesToReturn.add(msg);
+            }
+        }
+
+        return messagesToReturn;
     }
 
 }

@@ -68,6 +68,9 @@ public class MessageController {
         if(Users.IsUserHaveAccess(senderLogin , senderKey)){
             Message message1 = new Message(senderLogin , receiverLogin , message , new Date(System.currentTimeMillis()));
             Messages.addNewMessage(message1);
+            response.setResponseID(0);
+            response.setResponseMessage("Success");
+            return response;
         }
 
         response.setResponseID(1);
