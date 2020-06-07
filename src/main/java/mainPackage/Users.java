@@ -80,8 +80,13 @@ public class Users {
 
     public static User FindUserToAuth(String login , String password){
         for(User currentUser : usersList){
+
             if(currentUser.getLogin().equals(login) && currentUser.getPassword().equals(password)){
-                return currentUser;
+                if(currentUser.isBanned() == true){
+                    return new User("","","");
+                }else{
+                    return currentUser;
+                }
             }
         }
 
@@ -102,5 +107,28 @@ public class Users {
         return false;
     }
 
+    public static ArrayList<User> getAllUsers(){
+        return usersList;
+    }
+
+    public static void deleteUser(String login){
+        usersList.removeIf(user -> user.getLogin().equals(login));
+    }
+
+    public static void banUser(String login){
+        usersList.forEach(user -> {
+            if(user.getLogin().equals(login)){
+                user.setBanned(true);
+            }
+        });
+    }
+
+    public static void unbanUser(String login){
+        usersList.forEach(user -> {
+            if(user.getLogin().equals(login)){
+                user.setBanned(false);
+            }
+        });
+    }
 
 }
